@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FusionTalk Login</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .auth-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 350px;
+            text-align: center;
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; margin-bottom: 5px; color: #555; font-weight: bold; }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #3367d6; }
+        .toggle-auth { margin-top: 20px; color: #666; }
+        .toggle-auth a { color: #4285f4; text-decoration: none; }
+        .error-message { color: #d32f2f; margin: 10px 0; font-size: 14px; }
+        
+        /* Welcome page styles */
+        #welcome-page {
+            display: none;
+            text-align: center;
+        }
+        #welcome-page h1 {
+            color: #4285f4;
+            margin-bottom: 30px;
+        }
+        .user-info {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .logout-btn {
+            background-color: #d32f2f;
+            margin-top: 30px;
+        }
+        .logout-btn:hover {
+            background-color: #b71c1c;
+        }
+        
+        /* Terms and Privacy checkboxes */
+       .terms-checkbox {
+    margin: 5px 0;      /* Very tight vertical spacing */
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    line-height: 1;     /* Minimal line height */
+}
+
+.terms-checkbox input {
+    width: auto;
+    margin-right: 5px;
+    margin-top: -2px;
+    transform: translateY(1px);  /* Precise vertical adjustment */
+}
+
+.terms-checkbox label {
+    margin-bottom: 0;
+    padding-top: 1px;   /* Fine adjustment */
+}
+        .terms-link {
+            color: #4285f4;
+            text-decoration: underline;
+        }
+        .terms-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Password toggle styles */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #666;
+    z-index: 2;
+}
+
+.toggle-password:hover {
+    color: #4285f4;
+}
+
+/* Adjust input padding to make room for the eye icon */
+#login-password, #signup-password {
+    padding-right: 35px;
+    width: 100%;
+}
+
+/* Dark Theme Styles - Blue & White Version */
+body.dark-theme {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.dark-theme .auth-container {
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border: 1px solid #333;
+}
+
+.dark-theme h1 {
+    color: #4285f4; /* Blue accent color */
+}
+
+.dark-theme label {
+    color: #cccccc;
+}
+
+.dark-theme input {
+    background-color: #2d2d2d;
+    border-color: #444;
+    color: #ffffff;
+}
+
+.dark-theme input::placeholder {
+    color: #999999;
+}
+
+.dark-theme input:focus {
+    border-color: #4285f4;
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+    outline: none;
+}
+
+.dark-theme button {
+    background-color: #4285f4;
+    color: white;
+}
+
+.dark-theme button:hover {
+    background-color: #3367d6;
+}
+
+.dark-theme .toggle-auth {
+    color: #aaaaaa;
+}
+
+.dark-theme .toggle-auth a {
+    color: #4285f4;
+}
+
+.dark-theme .error-message {
+    color: #ff6b6b;
+}
+
+.dark-theme .user-info {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    border: 1px solid #333;
+}
+
+.dark-theme .logout-btn {
+    background-color: #ea4335;
+}
+
+.dark-theme .logout-btn:hover {
+    background-color: #d33426;
+}
+
+.dark-theme .forgot-password a {
+    color: #8ab4f8;
+}
+
+.dark-theme .forgot-password a:hover {
+    color: #4285f4;
+}
+
+.dark-theme .terms-checkbox {
+    color: #cccccc;
+}
+
+.dark-theme .terms-link {
+    color: #8ab4f8;
+}
+
+.dark-theme .toggle-password {
+    color: #cccccc;
+}
+
+.dark-theme .toggle-password:hover {
+    color: #4285f4;
+}
+
+/* Dark theme toggle switch - Blue version */
+.dark-theme .slider {
+    background-color: #555;
+}
+
+.dark-theme input:checked + .slider {
+    background-color: #4285f4;
+}
+
+/* Additional blue accents */
+.dark-theme .auth-container a:hover {
+    color: #8ab4f8;
+}
+
+.dark-theme .terms-checkbox input:checked {
+    accent-color: #4285f4;
+}
+
+/* Dark Theme Styles */
+body.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dark-theme .auth-container {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.dark-theme h1 {
+    color: #4285f4;
+}
+
+.dark-theme .form-group label {
+    color: #bbbbbb;
+}
+
+.dark-theme input {
+    background-color: #2d2d2d;
+    border: 1px solid #444;
+    color: #ffffff;
+}
+
+.dark-theme input::placeholder {
+    color: #888;
+}
+
+.dark-theme input:focus {
+    border-color: #4285f4;
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.3);
+    outline: none;
+}
+
+.dark-theme button {
+    background-color: #4285f4;
+    color: white;
+}
+
+.dark-theme button:hover {
+    background-color: #3367d6;
+}
+
+.dark-theme .toggle-auth {
+    color: #aaaaaa;
+}
+
+.dark-theme .toggle-auth a {
+    color: #8ab4f8;
+}
+
+.dark-theme .error-message {
+    color: #ff6b6b;
+}
+
+.dark-theme .user-info {
+    background-color: #2d2d2d;
+    border: 1px solid #333;
+    color: #ffffff;
+}
+
+.dark-theme .logout-btn {
+    background-color: #ea4335;
+}
+
+.dark-theme .logout-btn:hover {
+    background-color: #d33426;
+}
+
+.dark-theme .forgot-password a {
+    color: #8ab4f8;
+}
+
+.dark-theme .forgot-password a:hover {
+    color: #4285f4;
+}
+
+.dark-theme .terms-checkbox {
+    color: #bbbbbb;
+}
+
+.dark-theme .terms-link {
+    color: #8ab4f8;
+}
+
+.dark-theme .terms-link:hover {
+    color: #4285f4;
+}
+
+.dark-theme .toggle-password {
+    color: #888;
+}
+
+.dark-theme .toggle-password:hover {
+    color: #4285f4;
+}
+
+/* Username field specific dark styles */
+.dark-theme .username-container span {
+    color: #888 !important;
+}
+
+.dark-theme #username-error {
+    color: #ff6b6b;
+}
+
+/* Checkboxes in dark mode */
+.dark-theme input[type="checkbox"] {
+    accent-color: #4285f4;
+}
+
+/* Welcome page specific dark styles */
+.dark-theme #welcome-page h1 {
+    color: #4285f4;
+}
+
+.dark-theme .user-info p strong {
+    color: #8ab4f8;
+}
+
+/* Password strength indicator (if you add one later) */
+.dark-theme .password-strength {
+    background-color: #2d2d2d;
+}
+
+/* Transition effects for smooth theme switching */
+.auth-container,
+button,
+input,
+.toggle-auth,
+.user-info {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+        .forgot-password {
+    text-align: right;
+    margin-top: 5px;
+}
+
+.forgot-password a {
+    color: #666;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    color: #4285f4;
+    text-decoration: underline;
+}
+    </style>
+    <p style="background-image: url('images/abstract-paper-style-background_52683-133319.png');"></p>
+</head>
+<body>
+ <div class="auth-container">
+        <!-- Login Form -->
+        <div id="login-form">
+            <h1>Login to FusionTalk Messages</h1>
+            <div class="error-message" id="login-error"></div>
+            <div class="form-group">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" placeholder="Your email">
+            </div>
+        <div class="form-group">
+    <label for="login-password">Password</label>
+    <div class="password-container">
+        <input type="password" id="login-password" placeholder="Password">
+        <span class="toggle-password" id="toggle-password">
+            <i class="far fa-eye"></i>
+        </span>
+    </div>
+    <div class="forgot-password">
+        <a href="#" id="forgot-password-link">Forgot password?</a>
+    </div>
+</div>
+            <button id="login-btn">Login</button>
+            <div class="toggle-auth">
+                Don't have an account? <a id="show-signup">Sign up</a>
+            </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signup-form" style="display: none;">
+            <h1>Welcome to FusionTalk Messages, create an account to get started!</h1>
+            <div class="error-message" id="signup-error"></div>
+            <div class="form-group">
+                <label for="signup-name">Name</label>
+                <input type="text" id="signup-name" placeholder="Your name">
+            </div>
+<div class="form-group">
+        <label for="signup-username">Username</label>
+    <div class="username-container" style="position: relative;">
+        <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); 
+               color: #666; pointer-events: none; z-index: 2;">@</span>
+        <input type="text" id="signup-username" placeholder="Username" 
+               style="padding-left: 30px; width: 100%; box-sizing: border-box;"
+               oninput="validateUsername(this)">
+    </div>
+    <small id="username-error" style="color: #d32f2f; font-size: 12px; display: none;"></small>
+</div>
+            <div class="form-group">
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" placeholder="Your email">
+            </div>
+           <div class="form-group">
+    <label for="signup-password">Password</label>
+    <div class="password-container">
+        <input type="password" id="signup-password" placeholder="Create a password">
+        <span class="toggle-password" id="toggle-signup-password">
+            <i class="far fa-eye"></i>
+        </span>
+    </div>
+</div>
+
+            <!-- Terms and Privacy Checkboxes -->
+            <div class="terms-container">
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="terms-checkbox" required>
+                    <label for="terms-checkbox">
+                        I agree to the <a href="terms.html" class="terms-link">Terms and Conditions</a>
+                    </label>
+                </div>
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="privacy-checkbox" required>
+                    <label for="privacy-checkbox">
+                        I agree to the <a href="privacy.html" class="terms-link">Privacy Policy</a>
+                    </label>
+                </div>
+            </div>
+
+            <button id="signup-btn">Sign Up</button>
+            <div class="toggle-auth">
+                Already have an account? <a id="show-login">Login</a>
+            </div>
+        </div>
+
+        <!-- Welcome Page -->
+        <div id="welcome-page" style="display: none;">
+            <h1>Welcome!</h1>
+            <div class="user-info">
+                <p><strong>Name:</strong> <span id="welcome-name"></span></p>
+                <p><strong>Email:</strong> <span id="welcome-email"></span></p>
+            </div>
+            <button id="logout-btn" class="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs (Modular v9+) -->
+<script type="module">
+    // Import the functions you need from the SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { 
+        getAuth, 
+        createUserWithEmailAndPassword, 
+        signInWithEmailAndPassword,
+        onAuthStateChanged,
+        signOut,
+        sendPasswordResetEmail
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { 
+        getDatabase, 
+        ref, 
+        set,
+        get,
+        serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDFynQbz0D0SDtujhINsGktw46m7v5urE8",
+        authDomain: "loginsystem-1221b.firebaseapp.com",
+        projectId: "loginsystem-1221b",
+        storageBucket: "loginsystem-1221b.firebasestorage.app",
+        messagingSenderId: "574993238923",
+        appId: "1:574993238923:web:4dd85c9bfbb66828d9bd8e"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    // DOM Elements
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const welcomePage = document.getElementById('welcome-page');
+    const showSignup = document.getElementById('show-signup');
+    const showLogin = document.getElementById('show-login');
+    const loginBtn = document.getElementById('login-btn');
+    const signupBtn = document.getElementById('signup-btn');
+    const loginError = document.getElementById('login-error');
+    const signupError = document.getElementById('signup-error');
+    const logoutBtn = document.getElementById('logout-btn');
+    const welcomeName = document.getElementById('welcome-name');
+    const welcomeEmail = document.getElementById('welcome-email');
+    const forgotPasswordLink = document.getElementById('forgot-password-link');
+    const forgotPasswordEmail = document.getElementById('login-email');
+    const togglePassword = document.getElementById('toggle-password');
+    const toggleSignupPassword = document.getElementById('toggle-signup-password');
+    const loginPassword = document.getElementById('login-password');
+    const signupPassword = document.getElementById('signup-password');
+
+    // Password toggle functionality
+    togglePassword.addEventListener('click', function() {
+        const type = loginPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+        loginPassword.setAttribute('type', type);
+        this.querySelector('i').classList.toggle('fa-eye-slash');
+        this.querySelector('i').classList.toggle('fa-eye');
+    });
+
+    toggleSignupPassword.addEventListener('click', function() {
+        const type = signupPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+        signupPassword.setAttribute('type', type);
+        this.querySelector('i').classList.toggle('fa-eye-slash');
+        this.querySelector('i').classList.toggle('fa-eye');
+    });
+
+    // Toggle between login/signup forms
+    showSignup.addEventListener('click', () => {
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'block';
+        loginError.textContent = '';
+    });
+    
+    showLogin.addEventListener('click', () => {
+        signupForm.style.display = 'none';
+        loginForm.style.display = 'block';
+        signupError.textContent = '';
+    });
+
+    // Show welcome page with user data
+function showWelcomePage(user) {
+    // Hide all other forms
+    loginForm.style.display = 'none';
+    signupForm.style.display = 'none';
+    
+    // Get user data from database
+    get(ref(database, 'users/' + user.uid))
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                welcomeName.textContent = userData.name;
+                welcomeEmail.textContent = user.email;
+                // Add username display if you want
+                welcomePage.style.display = 'block';
+                
+                // Redirect to chat page after successful login
+                window.location.href = "chat/chat.html";
+            } else {
+                console.log("No user data available");
+            }
+        })
+        .catch((error) => {
+            console.error("Error getting user data:", error);
+        });
+}
+
+    // Login Function
+    loginBtn.addEventListener('click', () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        
+        loginError.textContent = '';
+        
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                showWelcomePage(userCredential.user);
+            })
+            .catch((error) => {
+                loginError.textContent = error.message;
+            });
+    });
+
+    // Signup Function
+signupBtn.addEventListener('click', () => {
+    const name = document.getElementById('signup-name').value;
+    const usernameInput = document.getElementById('signup-username');
+    const username = validateUsername(usernameInput); // This now returns @username
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const termsChecked = document.getElementById('terms-checkbox').checked;
+    const privacyChecked = document.getElementById('privacy-checkbox').checked;
+    
+    signupError.textContent = '';
+    
+    if (!name || !username || !email || !password) {
+        signupError.textContent = 'Please fill in all fields';
+        return;
+    }
+    
+    if (username === '@') { // If they didn't enter anything after @
+        document.getElementById('username-error').textContent = "Please enter a username";
+        document.getElementById('username-error').style.display = 'block';
+        return;
+    }
+    
+    if (!termsChecked || !privacyChecked) {
+        signupError.textContent = 'Please agree to both Terms and Conditions and Privacy Policy';
+        return;
+    }
+    
+    // First check if username exists (without @ in the database)
+    const cleanUsername = username.substring(1); // Remove @ for database lookup
+    get(ref(database, 'usernames/' + cleanUsername))
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                throw new Error('Username already taken');
+            }
+            
+            // Create the user
+            return createUserWithEmailAndPassword(auth, email, password);
+        })
+        .then((userCredential) => {
+            const user = userCredential.user;
+            
+            // Save user data to Realtime Database
+            return Promise.all([
+                set(ref(database, 'users/' + user.uid), {
+                    name: name,
+                    username: username, // Save with @ symbol
+                    email: email,
+                    createdAt: serverTimestamp()
+                }),
+                set(ref(database, 'usernames/' + cleanUsername), user.uid) // Save without @ for lookup
+            ]);
+        })
+        .then(() => {
+            // After signup, show welcome page
+            showWelcomePage(auth.currentUser);
+        })
+        .catch((error) => {
+            signupError.textContent = error.message;
+        });
+});
+
+    // Forgot Password Function
+    forgotPasswordLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = forgotPasswordEmail.value;
+        
+        if (!email) {
+            loginError.textContent = 'Please enter your email address first';
+            return;
+        }
+        
+        sendPasswordResetEmail(auth, email)
+            .then(() => {
+                loginError.textContent = '';
+                // Show green text confirmation instead of alert
+                const confirmation = document.createElement('div');
+                confirmation.textContent = 'Password reset email sent! Please check your inbox.';
+                confirmation.style.color = '#4CAF50';
+                confirmation.style.marginTop = '10px';
+                confirmation.style.fontSize = '13px';
+                loginError.parentNode.insertBefore(confirmation, loginError.nextSibling);
+                
+                // Remove the confirmation after 5 seconds
+                setTimeout(() => {
+                    confirmation.remove();
+                }, 5000);
+            })
+            .catch((error) => {
+                loginError.textContent = error.message;
+            });
+    });
+
+    // Logout Function
+    logoutBtn.addEventListener('click', () => {
+        signOut(auth)
+            .then(() => {
+                // Show login form after logout
+                welcomePage.style.display = 'none';
+                loginForm.style.display = 'block';
+            })
+            .catch((error) => {
+                console.error("Logout error:", error);
+            });
+    });
+
+    // Check auth state
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is signed in
+            showWelcomePage(user);
+        } else {
+            // User is signed out
+            welcomePage.style.display = 'none';
+            loginForm.style.display = 'block';
+        }
+    });
+
+    function checkUsernameAvailability(username) {
+    return get(ref(database, 'usernames/' + username))
+        .then((snapshot) => {
+            return !snapshot.exists();
+        });
+}
+
+function validateUsername(input) {
+    const usernameError = document.getElementById('username-error');
+    const value = input.value;
+    
+    // Remove any @ symbols the user might try to add
+    const cleanValue = value.replace(/@/g, '');
+    
+    // Only allow alphanumeric characters and underscores
+    const isValid = /^[a-zA-Z0-9_]*$/.test(cleanValue);
+    
+    if (!isValid) {
+        usernameError.textContent = "Only letters, numbers, and underscores allowed";
+        usernameError.style.display = 'block';
+        // Remove invalid characters
+        input.value = cleanValue.replace(/[^a-zA-Z0-9_]/g, '');
+    } else {
+        usernameError.style.display = 'none';
+    }
+    
+    // Update the input value (without @ symbol)
+    input.value = cleanValue;
+    
+    // Return the full username with @
+    return '@' + cleanValue;
+}
+
+// Apply saved theme on other pages
+    (function () {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+    })();
+</script>
+</body>
+</html>
